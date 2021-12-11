@@ -3,7 +3,9 @@
 <PageTitle>Weather forecast</PageTitle>
 
 @using ProjectPlanner.Data
+@using ProjectPlanner.Models
 @inject WeatherForecastService ForecastService
+@inject AppDbContext Db
 
 <h1>Weather forecast</h1>
 
@@ -44,5 +46,13 @@ else
     protected override async Task OnInitializedAsync()
     {
         forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        User user = new User
+            {
+                Username = "test",
+                Password = "test"
+            };
+        var users = Db.Users;
+        users.Add(user);
+        Db.SaveChanges();
     }
 }
