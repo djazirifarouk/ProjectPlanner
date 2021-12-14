@@ -11,7 +11,7 @@ A Project Planner Web application using Blazor Server and Entity Framework Core.
 
 -   Authentication :
 
-    -   [ ] Identity setup
+    -   [x] Identity setup
     -   [ ] Login Page customization
     -   [ ] Sign up Page customization
 
