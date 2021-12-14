@@ -1,0 +1,13 @@
+@using ProjectPlanner.Data;
+
+<div class="card bg-light mb-3" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">@Project.Name</h5>
+    <p class="card-text">@Project.Description</p>
+  </div>
+</div>
+
+@code {
+    [Parameter]
+    public Project Project { get; set; }
+}

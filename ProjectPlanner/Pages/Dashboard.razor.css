@@ -1,0 +1,15 @@
+.projectcards-wrapper {
+    gap: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 2rem;
+}
+.toprow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.add-project-button {
+    width: 3rem;
+}

@@ -1,0 +1,38 @@
+@page "/"
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Http
+@using ProjectPlanner.Data
+@inject ApplicationDbContext context
+@inject IHttpContextAccessor httpContextAccessor
+
+<div class="toprow">
+    <h1>MyProjects</h1>
+    <button type="button" class="btn btn-dark" @onclick="OnAdd">+</button>
+</div>
+<div class="projectcards-wrapper">   
+    @foreach (Project project in Projects)
+    {
+        <ProjectCard Project=project />
+    }
+</div>
+
+@code {
+    public string UserName;
+    public MyUser User;
+    public Project Project;
+    public List<Project> Projects { get; set; } = new List<Project>();
+    protected override async Task OnInitializedAsync()
+    {
+        UserName = httpContextAccessor.HttpContext.User.Identity.Name;
+        User = context.Users.FirstOrDefault(user => user.UserName == UserName);
+
+        Project = new Project(){
+            Name = "Project 1",
+            Description = "My first Project Descriptiondsq dsqd qsd qsd sqd qsdqsdqsd qsd qsd sqd sqd"
+        };
+    }
+
+    public void OnAdd(){
+        Projects.Add(Project);
+    }
+}
