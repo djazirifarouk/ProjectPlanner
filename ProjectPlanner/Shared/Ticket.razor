@@ -1,3 +1,7 @@
+@using ProjectPlanner.Data
+@using Microsoft.EntityFrameworkCore;
+@inject ApplicationDbContext context
+
 <div class="card">
     <div class="card-header">
         Priority @priority
@@ -6,7 +10,10 @@
         <h5 class="card-title">@name</h5>
         <p class="card-text">@description</p>
         <row class="row justify-content-between">
-            <a href="#" class="btn btn-primary">Edit</a>
+            <div class="mx-2">
+                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-danger">Delete</a>
+            </div>
             <p class="text-danger">@dueDate</p>
         </row>
     </div>
@@ -14,11 +21,22 @@
 
 @code {
     [Parameter]
-    public string? name { get; set; }
-    [Parameter]
+    public Data.Ticket CurrentTicket { get; set; }
+    public string name { get; set; }
     public string description { get; set; } = "no description";
-    [Parameter]
     public int priority { get; set; } = 4;
-    [Parameter]
     public DateTime? dueDate { get; set; }
+
+    public List<Data.Tag> CurrentTags { get; set; }
+    public List<Data.Item> CurrentChecklist { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var ticket = context.Tickets
+        .Include(t => t.Tags)
+        .Include(t => t.Checklist)
+        .FirstOrDefault(t => t.Id == CurrentTicket.Id);
+        CurrentTags = ticket.Tags;
+        CurrentChecklist = ticket.Checklist;
+    }
 }

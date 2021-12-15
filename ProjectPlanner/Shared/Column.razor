@@ -2,16 +2,26 @@
 @using Microsoft.EntityFrameworkCore;
 @inject ApplicationDbContext context
 
-<div class="wrapper border border-dark">
-    <p class="column-name">@CurrentColumn.Name</p>
-    <div class="tickets-container">
-        @foreach (var ticket in CurrentTickets)
+<AuthorizeView>
+    <Authorized>
+        @if (ModalVisible)
         {
-            <p>@ticket.Name</p>
+            <CreateTicketModal OnClose=@CloseModal ColumnId=@ColumnIdInt />
         }
-    </div>
-</div>
+        <div class="wrapper border border-dark">
+            <p class="column-name">@CurrentColumn.Name</p>
+            <div class="tickets-container">
+                @foreach (var ticket in CurrentTickets)
+                {
+                    <Ticket CurrentTicket="ticket" />
+                }
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
 
+    </NotAuthorized>
+</AuthorizeView>
 <style>
     .wrapper {
         height: 500px;
@@ -36,9 +46,28 @@
 @code {
     [Parameter]
     public Data.Column CurrentColumn { get; set; }
-
+    [Parameter] public string ColumnId { get; set; }
     public List<Data.Ticket> CurrentTickets { get; set; }
+    public int ColumnIdInt { get; set; }
+    public bool ModalVisible { get; set; } = false;
 
+    protected override void OnParametersSet()
+    {
+        ColumnIdInt = Int32.Parse(ColumnId);
+        CurrentColumn = context.Columns
+        .Include(c => c.Tickets)
+        .FirstOrDefault(p => p.Id == ColumnIdInt);
+    }
+
+    public void CloseModal()
+    {
+        ModalVisible = false;
+    }
+
+    public void OnAdd()
+    {
+        ModalVisible = true;
+    }
     protected override async Task OnInitializedAsync()
     {
         var column = context.Columns

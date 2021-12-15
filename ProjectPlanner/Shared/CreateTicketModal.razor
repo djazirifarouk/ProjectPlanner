@@ -1,0 +1,84 @@
+﻿@using ProjectPlanner.Data
+@inject IHttpContextAccessor httpContextAccessor
+@inject ApplicationDbContext context;
+
+<div class="modal modal-dialog-centered" id="exampleModal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create a new column</h5>
+                <button type="button" class="btn btn-dark" @onclick=@OnClose>x</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row mb-3">
+                        <label for="NameInput" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" @bind="@TicketName" @bind:event="oninput"
+                                id="NameInput">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="NameInput" class="col-sm-2 col-form-label">Description</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" @bind="@TicketDescription" @bind:event="oninput"
+                                id="DescriptionInput">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="NameInput" class="col-sm-2 col-form-label">Priority</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" @bind="@TicketPriority" @bind:event="oninput"
+                                id="PriorityInput">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="OnClose">Close</button>
+                <button type="button" class="btn btn-primary" @onclick="OnSave">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public int ColumnId { get; set; }
+
+    public string TicketName { get; set; }
+    public string TicketDescription { get; set; }
+    public int TicketPriority { get; set; }
+    public DateTime TicketDueDate { get; set; }
+    public List<Tag> TicketTags { get; set; } = new List<Tag>();
+    public List<Item> TicketChecklist { get; set; } = new List<Item>();
+    protected override async Task OnInitializedAsync()
+    {
+        TicketName = "";
+        TicketDescription = "";
+        TicketPriority = 1;
+        TicketDueDate = DateTime.Now;
+        TicketTags = new List<Tag>();
+        TicketChecklist = new List<Item>();
+
+    }
+    public async void OnSave()
+    {
+        Column column = context.Columns.FirstOrDefault(c => c.Id == ColumnId);
+        Data.Ticket ticket = new Data.Ticket()
+            {
+                Name = TicketName,
+                Description = TicketDescription,
+                Priority = TicketPriority,
+                DueDate = TicketDueDate,
+                Tags = TicketTags,
+                Checklist = TicketChecklist
+            };
+        column.Tickets.Add(ticket);
+        context.SaveChanges();
+        await OnClose.InvokeAsync();
+    }
+}
