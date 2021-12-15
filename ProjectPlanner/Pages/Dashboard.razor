@@ -2,37 +2,48 @@
 @inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Http
 @using ProjectPlanner.Data
+@using Microsoft.EntityFrameworkCore;
 @inject ApplicationDbContext context
 @inject IHttpContextAccessor httpContextAccessor
 
+@if (ModalVisible)
+{
+    <CreateProjectModal OnClose=@CloseModal />
+}
+
 <div class="toprow">
     <h1>MyProjects</h1>
-    <button type="button" class="btn btn-dark" @onclick="OnAdd">+</button>
+    <button type="button" class="btn btn-dark" @onclick=@OnAdd>+</button>
 </div>
-<div class="projectcards-wrapper">   
-    @foreach (Project project in Projects)
+<div class="projectcards-wrapper">
+    @foreach (Data.Project project in User.Projects)
     {
         <ProjectCard Project=project />
     }
 </div>
 
+
+
 @code {
     public string UserName;
     public MyUser User;
     public Project Project;
-    public List<Project> Projects { get; set; } = new List<Project>();
+    public bool ModalVisible { get; set; } = false;
     protected override async Task OnInitializedAsync()
     {
         UserName = httpContextAccessor.HttpContext.User.Identity.Name;
-        User = context.Users.FirstOrDefault(user => user.UserName == UserName);
-
-        Project = new Project(){
-            Name = "Project 1",
-            Description = "My first Project Descriptiondsq dsqd qsd qsd sqd qsdqsdqsd qsd qsd sqd sqd"
-        };
+        User = context.Users
+        .Include(u => u.Projects)
+        .First(u => u.UserName == UserName);
     }
 
-    public void OnAdd(){
-        Projects.Add(Project);
+    public void CloseModal()
+    {
+        ModalVisible = false;
+    }
+
+    public void OnAdd()
+    {
+        ModalVisible = true;
     }
 }

@@ -1,13 +1,19 @@
 @using ProjectPlanner.Data;
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
-<div class="card bg-light mb-3" style="width: 18rem;">
+<div class="card bg-light mb-3" style="width: 18rem;" @onclick="@OnClick">
   <div class="card-body">
-    <h5 class="card-title">@Project.Name</h5>
+    <h5 class="card-titl ">@Project.Name</h5>
     <p class="card-text">@Project.Description</p>
   </div>
 </div>
 
 @code {
-    [Parameter]
-    public Project Project { get; set; }
+  [Parameter]
+  public Project Project { get; set; }
+
+  public void OnClick()
+  {
+    navigationManager.NavigateTo($"/{Project.Id}");
+  }
 }

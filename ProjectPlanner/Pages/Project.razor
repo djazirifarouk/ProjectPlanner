@@ -1,0 +1,23 @@
+@page "/{ProjectId}"
+@using ProjectPlanner.Data;
+@inject IHttpContextAccessor httpContextAccessor
+@inject ApplicationDbContext context;
+
+<AuthorizeView>
+    <Authorized>
+        <h1>@CurrentProject.Name</h1>
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Parameter] public string ProjectId { get; set; }
+    public Data.Project CurrentProject { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        CurrentProject = context.Projects.FirstOrDefault(p => p.Id == Int32.Parse(ProjectId));
+    }
+}

@@ -1,39 +1,67 @@
-@if (IsVisible){
-  <div class="modal" id="exampleModal" tabindex="-1" role="dialog" style="display: block;">
+@using ProjectPlanner.UIModels;
+@using ProjectPlanner.Data
+@inject IHttpContextAccessor httpContextAccessor
+@inject ApplicationDbContext context;
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+
+
+<div class="modal modal-dialog-centered" id="exampleModal" tabindex="-1" role="dialog" style="display: block;">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Create a new project</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span @onclick="OnClose">&times;</span>
-        </button>
+        <button type="button" class="btn btn-dark" @onclick=@OnClose>x</button>
       </div>
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
+        <form>
+          <div class="row mb-3">
+            <label for="NameInput" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" @bind="ProjectInput.Name" @bind:event="oninput" id="NameInput">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="DescriptionInput" class="col-sm-2 col-form-label">Description </label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" @bind="ProjectInput.Description" @bind:event="oninput"
+                id="DescriptionInput">
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="OnClose">Close</button>
-        <button type="button" class="btn btn-primary" @onclick="OnClose">Save changes</button>
+        <button type="button" class="btn btn-primary" @onclick="OnSave">Save changes</button>
       </div>
     </div>
   </div>
 </div>
 
-}
-else {
-  
-}
 
 
 @code {
-    [Parameter]
-    public bool IsVisible { get; set; }
-    public bool isHidden { get; set; }
-    public void OnSave(){
+  [Parameter]
+  public EventCallback OnClose { get; set; }
+  public UIModels.Project ProjectInput { get; set; }
 
-    }
-
-    public void OnClose(){
-      IsVisible = false;
-    }
+  public MyUser User { get; set; }
+  protected override async Task OnInitializedAsync()
+  {
+    ProjectInput = new UIModels.Project();
+    var userName = httpContextAccessor.HttpContext.User.Identity.Name;
+    var users = context.Users;
+    User = users.FirstOrDefault(user => user.UserName == userName);
+  }
+  public async void OnSave()
+  {
+    var project = new Data.Project()
+    {
+      Name = ProjectInput.Name,
+      Description = ProjectInput.Description
+    };
+    User.Projects.Add(project);
+    context.SaveChanges();
+    await OnClose.InvokeAsync();
+    navigationManager.NavigateTo($"/{project.Id}");
+  }
 }
