@@ -1,4 +1,5 @@
 ﻿@using ProjectPlanner.Data
+@using Microsoft.EntityFrameworkCore;
 @inject IHttpContextAccessor httpContextAccessor
 @inject ApplicationDbContext context;
 
@@ -32,6 +33,16 @@
                                 id="PriorityInput">
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <select class="form-select" aria-label="Default select example" @bind="@ChosenColumnId">
+                            <option selected="selected" value="@Columns.ElementAt(0).Id">@Columns.ElementAt(0).Name
+                            </option>
+                            @foreach (Data.Column @column in Columns.Skip(1).ToList())
+                            {
+                                <option value="@column.Id">@column.Name</option>
+                            }
+                        </select>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -47,37 +58,34 @@
     public EventCallback OnClose { get; set; }
 
     [Parameter]
-    public int ColumnId { get; set; }
-
+    public int ProjectId { get; set; }
+    public List<Data.Column> Columns { get; set; }
     public string TicketName { get; set; }
+    public string ChosenColumnId { get; set; }
     public string TicketDescription { get; set; }
-    public int TicketPriority { get; set; }
+    public string TicketPriority { get; set; }
     public DateTime TicketDueDate { get; set; }
-    public List<Tag> TicketTags { get; set; } = new List<Tag>();
-    public List<Item> TicketChecklist { get; set; } = new List<Item>();
     protected override async Task OnInitializedAsync()
     {
-        TicketName = "";
-        TicketDescription = "";
-        TicketPriority = 1;
-        TicketDueDate = DateTime.Now;
-        TicketTags = new List<Tag>();
-        TicketChecklist = new List<Item>();
+        Project project = context.Projects
+        .Include(p => p.Columns)
+        .FirstOrDefault(p => p.Id == ProjectId);
+        Columns = project.Columns;
 
     }
     public async void OnSave()
     {
-        Column column = context.Columns.FirstOrDefault(c => c.Id == ColumnId);
+        var columnsContext = context.Columns;
+        var chosenColumnIdInt = Int32.Parse(ChosenColumnId);
+        Data.Column chosenColumn = columnsContext.FirstOrDefault(c => c.Id == chosenColumnIdInt);
+        int PriorityInt = Int32.Parse(TicketPriority);
         Data.Ticket ticket = new Data.Ticket()
-            {
-                Name = TicketName,
-                Description = TicketDescription,
-                Priority = TicketPriority,
-                DueDate = TicketDueDate,
-                Tags = TicketTags,
-                Checklist = TicketChecklist
-            };
-        column.Tickets.Add(ticket);
+        {
+            Name = TicketName,
+            Description = TicketDescription,
+            Priority = PriorityInt
+        };
+        chosenColumn.Tickets.Add(ticket);
         context.SaveChanges();
         await OnClose.InvokeAsync();
     }

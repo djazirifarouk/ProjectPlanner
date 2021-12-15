@@ -10,9 +10,19 @@
         {
             <CreateColumnModal OnClose=@CloseModal ProjectId=@ProjectIdInt />
         }
+        @if (ModalVisibleTicket)
+        {
+            <CreateTicketModal OnClose=@CloseTicketModal ProjectId=@ProjectIdInt />
+        }
         <div class="toprow">
             <h1>@CurrentProject.Name</h1>
-            <button type="button" class="btn btn-dark" @onclick=@OnAdd>+ Column</button>
+            <div>
+                @if (CurrentProject.Columns.Count >= 1)
+                {
+                    <button type="button" class="btn btn-dark mx-2" @onclick=@OnAddTicket>+ Ticket</button>
+                }
+                <button type="button" class="btn btn-dark" @onclick=@OnAdd>+ Column</button>
+            </div>
         </div>
         <div class="project-container">
             <div class="columns-container">
@@ -52,7 +62,7 @@
     public Data.Project CurrentProject { get; set; }
     public int ProjectIdInt { get; set; }
     public bool ModalVisible { get; set; } = false;
-
+    public bool ModalVisibleTicket { get; set; } = false;
     protected override void OnParametersSet()
     {
         ProjectIdInt = Int32.Parse(ProjectId);
@@ -65,9 +75,17 @@
     {
         ModalVisible = false;
     }
+    public void CloseTicketModal()
+    {
+        ModalVisibleTicket = false;
+    }
 
     public void OnAdd()
     {
         ModalVisible = true;
+    }
+    public void OnAddTicket()
+    {
+        ModalVisibleTicket = true;
     }
 }
