@@ -1,13 +1,50 @@
+@using ProjectPlanner.Data
+@using Microsoft.EntityFrameworkCore;
+@inject ApplicationDbContext context
+
 <div class="wrapper border border-dark">
-    <div></div>
+    <p class="column-name">@CurrentColumn.Name</p>
+    <div class="tickets-container">
+        @foreach (var ticket in CurrentTickets)
+        {
+            <p>@ticket.Name</p>
+        }
+    </div>
 </div>
 
 <style>
     .wrapper {
         height: 500px;
         min-width: 300px;
-        background-color: gray;
-        opacity: 10%;
+        background-color: white;
+
+    }
+
+    .tickets-container {
         overflow-y: auto;
     }
+
+    .column-name {
+        color: black;
+        opacity: 100%;
+        text-align: center;
+        border: solid 1px black;
+        font-weight: bold;
+    }
 </style>
+
+@code {
+    [Parameter]
+    public Data.Column CurrentColumn { get; set; }
+
+    public List<Data.Ticket> CurrentTickets { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var column = context.Columns
+        .Include(c => c.Tickets)
+        .FirstOrDefault(c => c.Id == CurrentColumn.Id);
+        CurrentTickets = column.Tickets;
+    }
+
+}

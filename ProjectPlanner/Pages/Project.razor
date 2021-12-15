@@ -1,5 +1,6 @@
 @page "/{ProjectId}"
 @using ProjectPlanner.Data;
+@using Microsoft.EntityFrameworkCore;
 @inject IHttpContextAccessor httpContextAccessor
 @inject ApplicationDbContext context;
 
@@ -17,7 +18,7 @@
             <div class="columns-container">
                 @foreach (var Column in CurrentProject.Columns)
                 {
-                    <ProjectPlanner.Shared.Column />
+                    <ProjectPlanner.Shared.Column CurrentColumn=@Column />
                 }
             </div>
         </div>
@@ -56,7 +57,9 @@
     protected override void OnParametersSet()
     {
         ProjectIdInt = Int32.Parse(ProjectId);
-        CurrentProject = context.Projects.FirstOrDefault(p => p.Id == ProjectIdInt);
+        CurrentProject = context.Projects
+        .Include(p => p.Columns)
+        .FirstOrDefault(p => p.Id == ProjectIdInt);
     }
 
     public void CloseModal()
