@@ -1,6 +1,10 @@
 @using ProjectPlanner.Data;
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
-
+<style>
+    .card{
+        cursor: pointer;
+    }
+</style>
 <div class="card bg-light mb-3" style="width: 18rem;" @onclick="@OnClick">
   <div class="card-body">
     <h5 class="card-titl ">@Project.Name</h5>
