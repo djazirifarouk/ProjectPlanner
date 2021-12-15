@@ -6,14 +6,15 @@
 @inject ApplicationDbContext context
 @inject IHttpContextAccessor httpContextAccessor
 
+
 @if (ModalVisible)
 {
     <CreateProjectModal OnClose=@CloseModal />
 }
 
 <div class="toprow">
-    <h1>MyProjects</h1>
-    <button type="button" class="btn btn-dark" @onclick=@OnAdd>+</button>
+    <h1>My Projects</h1>
+    <button type="button" class="btn btn-dark" @onclick=@OnAdd>New Project</button>
 </div>
 <div class="projectcards-wrapper">
     @foreach (Data.Project project in User.Projects)
