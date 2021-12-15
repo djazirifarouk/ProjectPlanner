@@ -1,3 +1,24 @@
+<div class="card">
+    <div class="card-header">
+        Priority @priority
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">@name</h5>
+        <p class="card-text">@description</p>
+        <row class="row justify-content-between">
+            <a href="#" class="btn btn-primary">Edit</a>
+            <p class="text-danger">@dueDate</p>
+        </row>
+    </div>
+</div>
 
-
-<h1>Ticket</h1>
+@code {
+    [Parameter]
+    public string? name { get; set; }
+    [Parameter]
+    public string description { get; set; } = "no description";
+    [Parameter]
+    public int priority { get; set; } = 4;
+    [Parameter]
+    public DateTime? dueDate { get; set; }
+}
