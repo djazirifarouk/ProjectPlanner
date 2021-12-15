@@ -5,19 +5,67 @@
 
 <AuthorizeView>
     <Authorized>
-        <h1>@CurrentProject.Name</h1>
+        @if (ModalVisible)
+        {
+            <CreateColumnModal OnClose=@CloseModal ProjectId=@ProjectIdInt />
+        }
+        <div class="toprow">
+            <h1>@CurrentProject.Name</h1>
+            <button type="button" class="btn btn-dark" @onclick=@OnAdd>+</button>
+        </div>
+        <div class="project-container">
+            <div class="columns-container">
+                @foreach (var Column in CurrentProject.Columns)
+                {
+                    <ProjectPlanner.Shared.Column />
+                }
+            </div>
+        </div>
+
     </Authorized>
     <NotAuthorized>
 
     </NotAuthorized>
 </AuthorizeView>
 
+<style>
+    .columns-container {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+    }
+
+    .project-container {
+        overflow-x: auto;
+
+    }
+
+    .toprow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+
 @code {
     [Parameter] public string ProjectId { get; set; }
     public Data.Project CurrentProject { get; set; }
+    public int ProjectIdInt { get; set; }
+    public bool ModalVisible { get; set; } = false;
 
     protected override void OnParametersSet()
     {
-        CurrentProject = context.Projects.FirstOrDefault(p => p.Id == Int32.Parse(ProjectId));
+        ProjectIdInt = Int32.Parse(ProjectId);
+        CurrentProject = context.Projects.FirstOrDefault(p => p.Id == ProjectIdInt);
+    }
+
+    public void CloseModal()
+    {
+        ModalVisible = false;
+    }
+
+    public void OnAdd()
+    {
+        ModalVisible = true;
     }
 }
