@@ -2,19 +2,19 @@
 @using Microsoft.EntityFrameworkCore;
 @inject ApplicationDbContext context
 
-<div class="card">
+<div class="card" style="width : 80%; ">
     <div class="card-header">
-        Priority @priority
+        Priority @CurrentTicket.Priority
     </div>
     <div class="card-body">
-        <h5 class="card-title">@name</h5>
-        <p class="card-text">@description</p>
+        <h5 class="card-title">@CurrentTicket.Name</h5>
+        <p class="card-text">@CurrentTicket.Description</p>
         <row class="row justify-content-between">
             <div class="mx-2">
                 <a href="#" class="btn btn-primary">Edit</a>
                 <a href="#" class="btn btn-danger">Delete</a>
             </div>
-            <p class="text-danger">@dueDate</p>
+            <p class="text-danger">@CurrentTicket.DueDate</p>
         </row>
     </div>
 </div>
@@ -22,11 +22,6 @@
 @code {
     [Parameter]
     public Data.Ticket CurrentTicket { get; set; }
-    public string name { get; set; }
-    public string description { get; set; }
-    public int priority { get; set; }
-    public DateTime? dueDate { get; set; }
-
     public List<Data.Tag> CurrentTags { get; set; }
     public List<Data.Item> CurrentChecklist { get; set; }
 

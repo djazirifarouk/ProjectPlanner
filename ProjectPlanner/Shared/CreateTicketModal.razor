@@ -61,7 +61,7 @@
     public int ProjectId { get; set; }
     public List<Data.Column> Columns { get; set; }
     public string TicketName { get; set; }
-    public string ChosenColumnId { get; set; }
+    public int ChosenColumnId { get; set; }
     public string TicketDescription { get; set; }
     public string TicketPriority { get; set; }
     public DateTime TicketDueDate { get; set; }
@@ -76,8 +76,7 @@
     public async void OnSave()
     {
         var columnsContext = context.Columns;
-        var chosenColumnIdInt = Int32.Parse(ChosenColumnId);
-        Data.Column chosenColumn = columnsContext.FirstOrDefault(c => c.Id == chosenColumnIdInt);
+        Data.Column chosenColumn = columnsContext.FirstOrDefault(c => c.Id == ChosenColumnId);
         int PriorityInt = Int32.Parse(TicketPriority);
         Data.Ticket ticket = new Data.Ticket()
         {
