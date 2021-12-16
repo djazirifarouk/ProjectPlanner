@@ -7,8 +7,8 @@
     <div class="tickets-container">
         @foreach (var ticket in CurrentTickets)
         {
-            <div class="">
-                <Ticket CurrentTicket=ticket />
+            <div class="mb-3">
+                <Ticket CurrentTicket=ticket OnRemoval=@FetchTickets />
             </div>
         }
     </div>
@@ -43,13 +43,18 @@
     [Parameter]
     public Data.Column? CurrentColumn { get; set; }
 
-    public List<Data.Ticket> CurrentTickets { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    public void FetchTickets()
     {
         var column = context.Columns
         .Include(c => c.Tickets)
         .FirstOrDefault(c => c.Id == CurrentColumn.Id);
         CurrentTickets = column.Tickets;
+    }
+
+    public List<Data.Ticket> CurrentTickets { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        FetchTickets();
     }
 }

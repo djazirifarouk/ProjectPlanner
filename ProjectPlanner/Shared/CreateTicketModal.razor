@@ -8,8 +8,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create a new column</h5>
-                <button type="button" class="btn btn-dark" @onclick=@OnClose>x</button>
+                <h5 class="modal-title">Create a new ticket</h5>
             </div>
             <div class="modal-body">
                 <form>
@@ -28,9 +27,10 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="NameInput" class="col-sm-2 col-form-label">Priority</label>
+                        <label for="priorityInput" class="col-sm-2 col-form-label">Priority</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" @bind="@TicketPriority">
+                            <select class="form-select" aria-label="Default select example" @bind="@TicketPriority"
+                                id="priorityInput">
                                 <option selected="selected">1</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -39,8 +39,9 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="NameInput" class="col-sm-2 col-form-label">Choose Column</label>
-                        <select class="form-select" aria-label="Default select example" @bind="@ChosenColumnId">
+                        <label for="columnInput" class="col-sm-2 col-form-label">Column</label>
+                        <select class="form-select" aria-label="Default select example" @bind="@ChosenColumnId"
+                            id="columnInput">
                             <option selected="selected" value="@Columns.ElementAt(0).Id">@Columns.ElementAt(0).Name
                             </option>
                             @foreach (Data.Column @column in Columns.Skip(1).ToList())
@@ -92,11 +93,11 @@
         Data.Column chosenColumn = columnsContext.FirstOrDefault(c => c.Id == ChosenColumnId);
 
         Data.Ticket ticket = new Data.Ticket()
-            {
-                Name = TicketName,
-                Description = TicketDescription,
-                Priority = TicketPriority
-    };
+        {
+            Name = TicketName,
+            Description = TicketDescription,
+            Priority = TicketPriority
+        };
         chosenColumn.Tickets.Add(ticket);
         context.SaveChanges();
         var currentUser = httpContextAccessor.HttpContext.User.Identity.Name;

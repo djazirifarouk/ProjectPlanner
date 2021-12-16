@@ -2,20 +2,19 @@
 @using Microsoft.EntityFrameworkCore;
 @inject ApplicationDbContext context
 
-<div class="card">
+<div class="card" style="border : solid 1px gray">
     <div class="card-header @headerColor">
-        <div class="row justify-content-between">
-            <div class="col">
-                Priority @CurrentTicket.Priority
+        <div class="d-flex flex-row justify-content-between">
+            <div class="">
+                @CurrentTicket.Name
             </div>
-            <div class="col">
+            <div class="">
                 <button href="#" class="btn btn-primary btn-sm">Edit</button>
-                <button href="#" class="btn btn-dark btn-sm">X</button>
+                <button href="#" class="btn btn-dark btn-sm" @onclick=@DeleteTicket>X</button>
             </div>
         </div>
     </div>
     <div class="card-body">
-        <h5 class="card-title">@CurrentTicket.Name</h5>
         <p class="card-text">@CurrentTicket.Description</p>
         @foreach (var tag in CurrentTags)
         {
@@ -34,6 +33,9 @@
 @code {
     [Parameter]
     public Data.Ticket CurrentTicket { get; set; }
+
+    [Parameter]
+    public EventCallback OnRemoval { get; set; }
     public List<Data.Tag> CurrentTags { get; set; }
     public List<Data.Item> CurrentChecklist { get; set; }
     public string headerColor = "";
@@ -63,13 +65,12 @@
         }
     }
 
-    public void DeleteTicket()
-    { /*
-var ticketContext = context.Tickets;
-Data.Column selectedTicket = ticketContext.FirstOrDefault(t => t.Id == CurrentTicket.Id);
-Tickets.Remove(ticket);
-context.SaveChanges();
-await OnClose.InvokeAsync();
-*/
+    public async void DeleteTicket()
+    {
+        var ticketContext = context.Tickets;
+        Data.Ticket selectedTicket = ticketContext.FirstOrDefault(t => t.Id == CurrentTicket.Id);
+        ticketContext.Remove(selectedTicket);
+        context.SaveChanges();
+        await OnRemoval.InvokeAsync();
     }
 }
