@@ -1,15 +1,17 @@
 @using ProjectPlanner.Data
 @using Microsoft.EntityFrameworkCore;
 @inject ApplicationDbContext context
+@inject IHttpContextAccessor httpContextAccessor
+@inject Logger.Logger logger
 
-<div class="card" style="border : solid 1px gray">
+
+<div class="card draggable" draggable="true" style="border : solid 1px gray">
     <div class="card-header @headerColor">
-        <div class="d-flex flex-row justify-content-between">
-            <div class="">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div style="font-weight: bold;">
                 @CurrentTicket.Name
             </div>
             <div class="">
-                <button href="#" class="btn btn-primary btn-sm">Edit</button>
                 <button href="#" class="btn btn-dark btn-sm" @onclick=@DeleteTicket>X</button>
             </div>
         </div>
@@ -34,11 +36,14 @@
     [Parameter]
     public Data.Ticket CurrentTicket { get; set; }
     [Parameter]
+    public int ProjectId { get; set; }
+    [Parameter]
     public EventCallback OnRemoval { get; set; }
     public List<Data.Tag> CurrentTags { get; set; }
     public List<Data.Item> CurrentChecklist { get; set; }
     public string headerColor = "";
 
+    public bool EditTicketModalVisible { get; set; }
     protected override async Task OnInitializedAsync()
     {
         var ticket = context.Tickets
@@ -70,6 +75,8 @@
         Data.Ticket selectedTicket = ticketContext.FirstOrDefault(t => t.Id == CurrentTicket.Id);
         ticketContext.Remove(selectedTicket);
         context.SaveChanges();
+        var currentUser = httpContextAccessor.HttpContext.User.Identity.Name;
+        logger.LogTicketRemoval(ProjectId, currentUser, CurrentTicket.Name);
         await OnRemoval.InvokeAsync();
     }
 }

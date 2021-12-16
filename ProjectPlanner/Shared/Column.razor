@@ -3,12 +3,13 @@
 @inject ApplicationDbContext context
 
 <div class="wrapper">
-    <p class="column-name">@CurrentColumn.Name</p>
-    <div class="tickets-container">
+    <p class="column-name">@CurrentColumn.Name (@CurrentTickets.Count())</p>
+    <div class="tickets-container" ondragover="event.preventDefault();"
+        ondragstart="event.dataTransfer.setData('', event.target.id);">
         @foreach (var ticket in CurrentTickets)
         {
             <div class="mb-3">
-                <Ticket CurrentTicket=ticket OnRemoval=@FetchTickets />
+                <Ticket CurrentTicket=ticket OnRemoval=@FetchTickets ProjectId=@ProjectId />
             </div>
         }
     </div>
@@ -41,8 +42,10 @@
 
 @code {
     [Parameter]
-    public Data.Column? CurrentColumn { get; set; }
+    public Data.Column CurrentColumn { get; set; }
 
+    [Parameter]
+    public int ProjectId { get; set; }
     public void FetchTickets()
     {
         var column = context.Columns

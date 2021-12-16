@@ -28,7 +28,7 @@
             <div class="columns-container">
                 @foreach (var Column in CurrentProject.Columns)
                 {
-                    <ProjectPlanner.Shared.Column CurrentColumn=@Column />
+                    <ProjectPlanner.Shared.Column CurrentColumn=@Column ProjectId=@ProjectIdInt />
                 }
             </div>
         </div>
