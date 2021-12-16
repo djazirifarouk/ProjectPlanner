@@ -53,8 +53,13 @@
                     <div class="row mb-3">
                         <label for="NameInput" class="col-form-label">
                             Tags
-                            <button type="button" class="btn btn-dark mx-2">+ Tag</button>
+                            <button type="button" class="btn btn-dark mx-2" @onclick=@OnAddTag>+ Tag</button>
                         </label>
+                        @if (ModalVisibleTag)
+                        {
+                            <CreateTagModal OnClose=@CloseModalTag TicketId=@TicketId />
+                        }
+                        
                     </div>
                 </form>
             </div>
@@ -79,6 +84,7 @@
     public int TicketPriority { get; set; }
     public DateTime TicketDueDate { get; set; }
     public bool ModalVisibleTag { get; set; } = false;
+    public int TicketId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -87,6 +93,7 @@
         .FirstOrDefault(p => p.Id == ProjectId);
         Columns = project.Columns;
     }
+
     public async void OnSave()
     {
         var columnsContext = context.Columns;
@@ -108,5 +115,9 @@
     public void OnAddTag()
     {
         ModalVisibleTag = true;
+    }
+    public void CloseModalTag()
+    {
+        ModalVisibleTag = false;
     }
 }

@@ -1,10 +1,11 @@
 ﻿@using ProjectPlanner.Data
+@using Microsoft.EntityFrameworkCore;
 @inject IHttpContextAccessor httpContextAccessor
 @inject ApplicationDbContext context;
 @inject Logger.Logger logger
 
-<!--
-<div class="modal modal-dialog-centered" id="exampleModal" tabindex="-1" role="dialog" style="display: block;">
+
+<div class="modal modal-dialog" id="exampleModal" tabindex="-1" role="dialog" style="display: block;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -22,44 +23,40 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="OnClose">Close</button>
-                <button type="button" class="btn btn-primary" @onclick="OnSave">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="OnClose">Back</button>
+                <button type="button" class="btn btn-primary" @onclick="OnSave">Add Tag</button>
             </div>
         </div>
     </div>
 </div>
--->
+
 
 @code {
-    /*
+
     [Parameter]
     public EventCallback OnClose { get; set; }
 
     [Parameter]
-    public int ColumnId { get; set; }
+    public int TicketId { get; set; }
     public List<Data.Ticket> Tickets { get; set; }
-
     public string TagName { get; set; }
+    public int SelectedTicketId { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Data.Column column = context.Columns
-        .Include(c => c.Tickets)
-        .FirstOrDefault(c => c.Id == ColumnId);
-        Tickets = column.Tickets;
+        Data.Ticket ticket = context.Tickets
+        .FirstOrDefault(t => t.Id == TicketId);
     }
     public async void OnSave()
     {
-        var columnsContext = context.Columns;
-        Data.Column chosenColumn = columnsContext.FirstOrDefault(c => c.Id == ChosenColumnId);
+        var ticketContext = context.Tickets;
+        Data.Ticket selectedTicket = ticketContext.FirstOrDefault(t => t.Id == SelectedTicketId);
 
-        Data.Column column = new Data.Column()
+        Data.Tag tag = new Data.Tag()
         {
             Name = TagName
         };
-        project.Columns.Add(column);
+        selectedTicket.Tags.Add(tag);
         context.SaveChanges();
-        logger.LogAction(project.Id, "test2");
         await OnClose.InvokeAsync();
     }
-    */
 }

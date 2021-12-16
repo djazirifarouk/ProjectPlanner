@@ -16,7 +16,7 @@
     </div>
     <div class="card-body">
         <p class="card-text">@CurrentTicket.Description</p>
-        @foreach (var tag in CurrentTags)
+        @foreach (Data.Tag tag in CurrentTags)
         {
             <div class="mx-2">
                 <span class="badge @tag.Color">tag.Name</span>
@@ -33,7 +33,6 @@
 @code {
     [Parameter]
     public Data.Ticket CurrentTicket { get; set; }
-
     [Parameter]
     public EventCallback OnRemoval { get; set; }
     public List<Data.Tag> CurrentTags { get; set; }
