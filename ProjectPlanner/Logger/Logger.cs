@@ -55,4 +55,10 @@ public class Logger
         LogAction(projectId, log);
     }
 
+    public void LogTicketRemoval(int projectId, string username, string ticketName)
+    {
+        string log = $"{username} removed ticket '{ticketName}'";
+        LogAction(projectId, log);
+    }
+
 }
