@@ -30,11 +30,16 @@
                     <div class="row mb-3">
                         <label for="NameInput" class="col-sm-2 col-form-label">Priority</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" @bind="@TicketPriority" @bind:event="oninput"
-                                id="PriorityInput">
+                            <select class="form-select" aria-label="Default select example" @bind="@TicketPriority">
+                                <option selected="selected">1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">
+                        <label for="NameInput" class="col-sm-2 col-form-label">Choose Column</label>
                         <select class="form-select" aria-label="Default select example" @bind="@ChosenColumnId">
                             <option selected="selected" value="@Columns.ElementAt(0).Id">@Columns.ElementAt(0).Name
                             </option>
@@ -43,6 +48,12 @@
                                 <option value="@column.Id">@column.Name</option>
                             }
                         </select>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="NameInput" class="col-form-label">
+                            Tags
+                            <button type="button" class="btn btn-dark mx-2">+ Tag</button>
+                        </label>
                     </div>
                 </form>
             </div>
@@ -64,8 +75,10 @@
     public string TicketName { get; set; }
     public int ChosenColumnId { get; set; }
     public string? TicketDescription { get; set; }
-    public string? TicketPriority { get; set; }
+    public int TicketPriority { get; set; }
     public DateTime TicketDueDate { get; set; }
+    public bool ModalVisibleTag { get; set; } = false;
+
     protected override async Task OnInitializedAsync()
     {
         Project project = context.Projects
@@ -77,17 +90,22 @@
     {
         var columnsContext = context.Columns;
         Data.Column chosenColumn = columnsContext.FirstOrDefault(c => c.Id == ChosenColumnId);
-        int PriorityInt = Int32.Parse(TicketPriority);
+
         Data.Ticket ticket = new Data.Ticket()
-        {
-            Name = TicketName,
-            Description = TicketDescription,
-            Priority = PriorityInt
-        };
+            {
+                Name = TicketName,
+                Description = TicketDescription,
+                Priority = TicketPriority
+    };
         chosenColumn.Tickets.Add(ticket);
         context.SaveChanges();
         var currentUser = httpContextAccessor.HttpContext.User.Identity.Name;
         logger.LogTicketCreation(ProjectId, currentUser, ticket.Name, chosenColumn.Name);
         await OnClose.InvokeAsync();
+    }
+
+    public void OnAddTag()
+    {
+        ModalVisibleTag = true;
     }
 }
