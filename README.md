@@ -12,24 +12,25 @@ A Project Planner Web application using Blazor Server and Entity Framework Core.
 -   Authentication :
 
     -   [x] Identity setup
-    -   [ ] Login Page customization
-    -   [ ] Sign up Page customization
+    -   [x] Login Page customization
+    -   [x] Sign up Page customization
 
 -   UI :
 
-    -   [ ] Project Card Component
-    -   [ ] Ticket Component
-    -   [ ] Column Component
-    -   [ ] My Projects Page
-    -   [ ] Project Page
-    -   [ ] Add column creation form
-    -   [ ] Add ticket creation form
-    -   [ ] Add tag creation form
+    -   [x] Project Card Component
+    -   [x] Ticket Component
+    -   [x] Column Component
+    -   [x] My Projects Page
+    -   [x] Project Page
+    -   [x] Add column creation form
+    -   [x] Add ticket creation form
+    -   [-] Add tag creation form
 
 -   General :
-    -   [ ] Log actions of each project to a file
+    -   [x] Log actions of each project to a file
     -   [ ] Ticket filtering
-    -   [ ] Add ability to remove columns and tickets
+    -   [x] Add ability to remove tickets
+    -   [ ] Add ability to remove columns
 
 ## Workflow
 
