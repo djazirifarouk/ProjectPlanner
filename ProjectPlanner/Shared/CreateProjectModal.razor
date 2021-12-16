@@ -61,7 +61,7 @@
     };
     User.Projects.Add(project);
     context.SaveChanges();
-    logger.LogAction(project.Id, "test");
+    logger.LogProjectCreation(project.Id, User.UserName, project.Name);
     await OnClose.InvokeAsync();
     navigationManager.NavigateTo($"/{project.Id}");
   }

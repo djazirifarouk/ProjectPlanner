@@ -2,7 +2,7 @@
 @using Microsoft.EntityFrameworkCore;
 @inject ApplicationDbContext context
 
-<div class="card" style="width : 80%; ">
+<div class="card">
     <div class="card-header @headerColor">
         <div class="row justify-content-between">
             <div class="col">
@@ -20,7 +20,7 @@
         @foreach (var tag in CurrentTags)
         {
             <div class="mx-2">
-                    <span class="badge @tag.Color">tag.Name</span>
+                <span class="badge @tag.Color">tag.Name</span>
             </div>
         }
         <p class="text-danger">@CurrentTicket.DueDate</p>
@@ -28,7 +28,7 @@
 </div>
 
 <style>
-   
+
 </style>
 
 @code {
@@ -64,12 +64,12 @@
     }
 
     public void DeleteTicket()
-    {   /*
-        var ticketContext = context.Tickets;
-        Data.Column selectedTicket = ticketContext.FirstOrDefault(t => t.Id == CurrentTicket.Id);
-        Tickets.Remove(ticket);
-        context.SaveChanges();
-        await OnClose.InvokeAsync();
-        */
+    { /*
+var ticketContext = context.Tickets;
+Data.Column selectedTicket = ticketContext.FirstOrDefault(t => t.Id == CurrentTicket.Id);
+Tickets.Remove(ticket);
+context.SaveChanges();
+await OnClose.InvokeAsync();
+*/
     }
 }

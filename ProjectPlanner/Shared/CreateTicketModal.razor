@@ -2,6 +2,7 @@
 @using Microsoft.EntityFrameworkCore;
 @inject IHttpContextAccessor httpContextAccessor
 @inject ApplicationDbContext context;
+@inject Logger.Logger logger;
 
 <div class="modal modal-dialog-centered" id="exampleModal" tabindex="-1" role="dialog" style="display: block;">
     <div class="modal-dialog" role="document">
@@ -73,8 +74,8 @@
     public List<Data.Column> Columns { get; set; }
     public string TicketName { get; set; }
     public int ChosenColumnId { get; set; }
-    public string TicketDescription { get; set; }
-    public int TicketPriority { get; set; }
+    public string? TicketDescription { get; set; }
+    public int? TicketPriority { get; set; }
     public DateTime TicketDueDate { get; set; }
     public bool ModalVisibleTag { get; set; } = false;
 
@@ -84,7 +85,6 @@
         .Include(p => p.Columns)
         .FirstOrDefault(p => p.Id == ProjectId);
         Columns = project.Columns;
-
     }
     public async void OnSave()
     {
@@ -99,6 +99,8 @@
     };
         chosenColumn.Tickets.Add(ticket);
         context.SaveChanges();
+        var currentUser = httpContextAccessor.HttpContext.User.Identity.Name;
+        logger.LogTicketCreation(ProjectId, currentUser, ticket.Name, chosenColumn.Name);
         await OnClose.InvokeAsync();
     }
 

@@ -51,7 +51,8 @@
         };
         project.Columns.Add(column);
         context.SaveChanges();
-        logger.LogAction(project.Id, "test2");
+        var currentUser = httpContextAccessor.HttpContext.User.Identity.Name;
+        logger.LogColumnCreation(project.Id, currentUser, column.Name);
         await OnClose.InvokeAsync();
     }
 }
