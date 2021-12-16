@@ -7,7 +7,9 @@
     <div class="tickets-container">
         @foreach (var ticket in CurrentTickets)
         {
-            <Ticket CurrentTicket=ticket />
+            <div class="my-3">
+                <Ticket CurrentTicket=ticket />
+            </div>
         }
     </div>
 </div>

@@ -4,15 +4,22 @@
 
 <div class="card" style="width : 80%; ">
     <div class="card-header">
-        Priority @CurrentTicket.Priority
+        <div class="row justify-content-between">
+            <div class="col">
+                Priority @CurrentTicket.Priority
+            </div>
+            <div class="col">
+                <a href="#" class="btn btn-secondary btn-sm">Edit</a>
+                <a href="#" class="btn btn-danger btn-sm">x</a>
+            </div>
+        </div>
     </div>
     <div class="card-body">
         <h5 class="card-title">@CurrentTicket.Name</h5>
         <p class="card-text">@CurrentTicket.Description</p>
         <row class="row justify-content-between">
             <div class="mx-2">
-                <a href="#" class="btn btn-primary">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                <span class="badge bg-info">Tag 1</span>
             </div>
             <p class="text-danger">@CurrentTicket.DueDate</p>
         </row>
