@@ -96,7 +96,7 @@
                 Name = TicketName,
                 Description = TicketDescription,
                 Priority = TicketPriority
-    };
+            };
         chosenColumn.Tickets.Add(ticket);
         context.SaveChanges();
         var currentUser = httpContextAccessor.HttpContext.User.Identity.Name;
